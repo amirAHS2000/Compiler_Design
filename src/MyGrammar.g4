@@ -20,8 +20,13 @@ switch_end_case : 'other' ':' expression;
 for : 'loop' '(' expression '&' expression '&' expression ')' '{' expression '}';
 
 //scan
+scan : 'read' '(' (type_name ',' ID (',')* )+  ')' ';';
 
 //print
+print : 'write' '(' 'string' ',' NUMBER ')'; //TODO not complete!
+
+//type names
+type_name : 'int' | 'float' | 'char' ;
 
 ID: [a-zA-Z][a-zA-Z_0-9]* ;
 NUMBER : INT | FLOAT;
