@@ -1,11 +1,19 @@
 grammar Grammar;
 
 // Rules
-start : 'int' 'main' statement;
-statement : '{' expression '}';
+start : Int 'main' statement;
+statement : LeftBrace expression RightBrace;
 expression : 'expression';  //todo not complete!
 
-if: If LeftParen
+if: If LeftParen;
+
+loop : Loop LeftParen expression And expression And expression RightParen LeftBrace expression RightBrace;
+
+until : Until LeftParen expression RightParen LeftBrace expression RightBrace;
+
+selector : Selector Colon Identifier LeftBrace (selector_case)+(selector_end_case)* RightBrace;
+selector_case : SelectorCase Number Colon expression;
+selector_end_case : SelectorEndCase Colon expression;
 
 // Lexers
 
@@ -20,6 +28,8 @@ So : 'so';
 Write : 'write';
 Read : 'read';
 Selector : 'selector';
+SelectorCase : 'select';
+SelectorEndCase : 'other';
 Loop : 'loop';
 Until : 'until';
 
@@ -62,6 +72,7 @@ Tilde : '~';
 Colon : ':';
 Semi : ';';
 Comma : ',';
+Point : '.';
 
 //Assigns
 Assign : '=';
@@ -72,6 +83,10 @@ PlusAssign : '+=';
 MinusAssign : '-=';
 
 Identifier : Nondigit ( Nondigit | Digit )*;
+Number : FloatNumber | IntegerNumber;
+
+IntegerNumber : (Plus | Minus)* Digit+;
+FloatNumber : (Plus | Minus)* Digit+ Point Digit+;
 
 fragment
 Nondigit : [a-zA-Z_];
@@ -79,3 +94,4 @@ Nondigit : [a-zA-Z_];
 fragment
 Digit : [0-9];
 
+WS : [ \t]+ -> skip;
