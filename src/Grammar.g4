@@ -11,7 +11,7 @@ loop : Loop LeftParen expression And expression And expression RightParen LeftBr
 
 until : Until LeftParen expression RightParen LeftBrace expression RightBrace;
 
-selector : Selector Colon Identifier LeftBrace (selector_case)+(selector_end_case)* RightBrace;
+selector : Selector Colon Identifier LeftBrace (selector_case)+ (selector_end_case)* RightBrace;
 selector_case : SelectorCase Number Colon expression;
 selector_end_case : SelectorEndCase Colon expression;
 
