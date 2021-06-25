@@ -1,7 +1,11 @@
 grammar Grammar;
 
 // Rules
+start : 'int' 'main' statement;
+statement : '{' expression '}';
+expression : 'expression';  //todo not complete!
 
+if: If LeftParen
 
 // Lexers
 
@@ -66,4 +70,12 @@ DivAssign : '/=';
 ModAssign : '%=';
 PlusAssign : '+=';
 MinusAssign : '-=';
+
+Identifier : Nondigit ( Nondigit | Digit )*;
+
+fragment
+Nondigit : [a-zA-Z_];
+
+fragment
+Digit : [0-9];
 
