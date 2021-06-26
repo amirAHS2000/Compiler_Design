@@ -23,6 +23,15 @@ selector_end_case : SelectorEndCase Colon expression;
 
 typename: CharType | IntType | FloatType;
 
+assign: typename (Identifier ( Assign (Number | Character | Identifier))? ) ( Comma Identifier ( Assign (Number | Character | Identifier))? )* Semi;
+assign_to : Identifier
+            (Assign | StarAssign | DivAssign | PlusAssign | MinusAssign | ModAssign)
+            (Minus)? (Number | Character | Identifier)
+            ( (Plus | Minus | Star | Div | Mod)
+              (Minus)? (Number | Character | Identifier)
+            )*
+            Semi;
+
 // Lexers
 
 //Typenames
