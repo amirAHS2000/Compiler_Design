@@ -57,6 +57,8 @@ assign_to : Identifier
             )*
             Semi;
 
+pp_mm: Identifier (PlusPlus | MinusMinus) Semi;
+
 // Lexers
 MainFunction : 'main';
 
