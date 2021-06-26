@@ -1,9 +1,33 @@
 grammar Grammar;
 
 // Rules
-start : IntType 'main' LeftParen RightParen statement;
-statement : LeftBrace expression RightBrace;
-expression : 'expression';  //todo not complete!
+program : function_definition statements;
+
+statements : statement | statement statements;
+
+statement : Identifier Assign expression
+            | LeftBrace statements RightBrace
+            | if
+            | until
+            | loop
+            | selector
+            | write
+            | read
+            | function_call;
+
+expression : expression Operation expression
+             | Not expression
+             | LeftParen expression RightParen
+             | Identifier
+             | Number;
+
+// function definition
+
+function_definition : typename (Identifier | MainFunction) LeftParen expression RightParen LeftBrace statements RightBrace;
+
+function_call : Identifier LeftParen expression RightParen Semi;
+
+//
 
 if: If LeftParen expression RightParen So LeftBrace expression RightBrace;
 
@@ -34,6 +58,7 @@ assign_to : Identifier
             Semi;
 
 // Lexers
+MainFunction : 'main';
 
 //Typenames
 CharType : 'char' ;
@@ -51,7 +76,6 @@ SelectorEndCase : 'other';
 Loop : 'loop';
 Until : 'until';
 
-
 //
 LeftParen : '(';
 RightParen : ')';
@@ -68,6 +92,30 @@ GreaterEqual : '>=';
 Equal : '==';
 NotEqual : '!=';
 
+//general
+Operation : Plus
+          | Minus
+          | PlusPlus
+          | MinusMinus
+          | Star
+          | Div
+          | Mod;
+AssignOperation : ModAssign
+          | StarAssign
+          | PlusAssign
+          | MinusAssign
+          | DivAssign
+          | Assign;
+
+LogicalOperation : AndAnd
+                 | OrOr;
+
+ComparatorOperation : Less
+                    | LessEqual
+                    | Greater
+                    | GreaterEqual
+                    | Equal
+                    | NotEqual;
 //
 Plus : '+';
 PlusPlus : '++';
