@@ -26,9 +26,10 @@ typename: CharType | IntType | FloatType;
 assign: typename (Identifier ( Assign (Number | Character | Identifier))? ) ( Comma Identifier ( Assign (Number | Character | Identifier))? )* Semi;
 assign_to : Identifier
             (Assign | StarAssign | DivAssign | PlusAssign | MinusAssign | ModAssign)
-            (Minus)? (Number | Character | Identifier)
-            ( (Plus | Minus | Star | Div | Mod)
-              (Minus)? (Number | Character | Identifier)
+            (Minus | Plus)? (Number | Character | Identifier)
+            (
+                (Plus | Minus | Star | Div | Mod)
+                (Minus | Plus)? (Number | Character | Identifier)
             )*
             Semi;
 
