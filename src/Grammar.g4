@@ -15,7 +15,7 @@ statement : Identifier Assign expression
             | read
             | function_call;
 
-expression : expression Operation expression
+expression : expression operation expression
              | Not expression
              | LeftParen expression RightParen
              | Identifier
@@ -47,7 +47,7 @@ selector_end_case : SelectorEndCase Colon expression;
 
 typename: CharType | IntType | FloatType;
 
-assign: typename (Identifier ( Assign (Number | Character | Identifier))? ) ( Comma Identifier ( Assign (Number | Character | Identifier))? )* Semi;
+assign: typename (Identifier ( Assign (Minus | Plus)? (Number | Character | Identifier))? ) ( Comma Identifier ( Assign (Minus | Plus)? (Number | Character | Identifier))? )* Semi;
 assign_to : Identifier
             (Assign | StarAssign | DivAssign | PlusAssign | MinusAssign | ModAssign)
             (Minus | Plus)? (Number | Character | Identifier)
@@ -58,6 +58,21 @@ assign_to : Identifier
             Semi;
 
 pp_mm: Identifier (PlusPlus | MinusMinus) Semi;
+
+operation : Plus
+          | Minus
+          | PlusPlus
+          | MinusMinus
+          | Star
+          | Div
+          | Mod;
+
+assignOperation : ModAssign
+          | StarAssign
+          | PlusAssign
+          | MinusAssign
+          | DivAssign
+          | Assign;
 
 // Lexers
 MainFunction : 'main';
@@ -95,19 +110,19 @@ Equal : '==';
 NotEqual : '!=';
 
 //general
-Operation : Plus
-          | Minus
-          | PlusPlus
-          | MinusMinus
-          | Star
-          | Div
-          | Mod;
-AssignOperation : ModAssign
-          | StarAssign
-          | PlusAssign
-          | MinusAssign
-          | DivAssign
-          | Assign;
+//Operation : Plus
+//          | Minus
+//          | PlusPlus
+//          | MinusMinus
+//          | Star
+//          | Div
+//          | Mod;
+//AssignOperation : ModAssign
+//          | StarAssign
+//          | PlusAssign
+//          | MinusAssign
+//          | DivAssign
+//          | Assign;
 
 LogicalOperation : AndAnd
                  | OrOr;
