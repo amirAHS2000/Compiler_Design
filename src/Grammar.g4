@@ -12,7 +12,7 @@ statement : LeftBrace statements RightBrace
             | selector
             | write Semi
             | read Semi
-            | function_call
+            | function_call Semi
             | assign Semi
             | assign_to Semi
             | inc_dec Semi ;
@@ -33,9 +33,9 @@ expression : expression comparators expression
 
 // function definition
 
-function_definition : typename (Identifier | MainFunction) LeftParen expression? RightParen LeftBrace statements RightBrace;
+function_definition : typename (Identifier | MainFunction) LeftParen expression* RightParen LeftBrace statements RightBrace;
 
-function_call : Identifier LeftParen expression RightParen Semi;
+function_call : Identifier LeftParen expression* RightParen;
 
 //
 
@@ -121,16 +121,6 @@ Greater : '>';
 GreaterEqual : '>=';
 Equal : '==';
 NotEqual : '!=';
-
-LogicalOperation : AndAnd
-                 | OrOr;
-
-ComparatorOperation : Less
-                    | LessEqual
-                    | Greater
-                    | GreaterEqual
-                    | Equal
-                    | NotEqual;
 //
 Plus : '+';
 PlusPlus : '++';
@@ -171,8 +161,8 @@ Newline: ('\r' '\n'? | '\n') -> skip;
 Identifier : Nondigit ( Nondigit | Digit )*;
 Number : FloatNumber | IntegerNumber;
 
-IntegerNumber : (Plus | Minus)* Digit+;
-FloatNumber : (Plus | Minus)* Digit+ Point Digit+;
+IntegerNumber : (Plus | Minus)? Digit+;
+FloatNumber : (Plus | Minus)? Digit+ Point Digit+;
 
 fragment
 Nondigit : [a-zA-Z_];
