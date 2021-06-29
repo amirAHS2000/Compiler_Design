@@ -3,76 +3,89 @@ grammar Grammar;
 // Rules
 program : function_definition statements;
 
-statements : statement | statement statements;
+statements : statement | statement statements | WS*;
 
-statement : Identifier Assign expression
-            | LeftBrace statements RightBrace
+statement : LeftBrace statements RightBrace
             | if
             | until
             | loop
             | selector
-            | write
-            | read
-            | function_call;
+            | write Semi
+            | read Semi
+            | function_call
+            | assign Semi
+            | assign_to Semi
+            | inc_dec Semi ;
 
-expression : expression operation expression
+statement_for_expression: write
+                          | read
+                          | function_call
+                          | assign
+                          | assign_to
+                          | inc_dec;
+
+expression : expression comparators expression
              | Not expression
              | LeftParen expression RightParen
+             | statement_for_expression
              | Identifier
              | Number;
 
 // function definition
 
-function_definition : typename (Identifier | MainFunction) LeftParen expression RightParen LeftBrace statements RightBrace;
+function_definition : typename (Identifier | MainFunction) LeftParen expression? RightParen LeftBrace statements RightBrace;
 
 function_call : Identifier LeftParen expression RightParen Semi;
 
 //
 
-if: If LeftParen expression RightParen So LeftBrace expression RightBrace;
+if: If LeftParen expression RightParen So statement;
 
-write: Write LeftParen string Comma Identifier RightParen Semi ;
+write: Write LeftParen string (Comma Identifier)* RightParen  ;
 
-read: Read LeftParen typename Comma Identifier RightParen Semi;
+read: Read LeftParen typename Comma Identifier RightParen ;
 
 string: String | Character;
 
-loop : Loop LeftParen expression And expression And expression RightParen LeftBrace expression RightBrace;
+loop : Loop LeftParen (expression ) And expression And expression RightParen  statement ;
 
-until : Until LeftParen expression RightParen LeftBrace expression RightBrace;
+until : Until LeftParen expression RightParen statement;
 
 selector : Selector Colon Identifier LeftBrace (selector_case)+ (selector_end_case)? RightBrace;
-selector_case : SelectorCase Number Colon expression;
-selector_end_case : SelectorEndCase Colon expression;
+selector_case : SelectorCase Number Colon statement;
+selector_end_case : SelectorEndCase Colon statement;
 
 typename: CharType | IntType | FloatType;
 
-assign: typename (Identifier ( Assign (Minus | Plus)? (Number | Character | Identifier))? ) ( Comma Identifier ( Assign (Minus | Plus)? (Number | Character | Identifier))? )* Semi;
+assign: typename ( Identifier ( Assign sign? (Number | Character | Identifier))? ) ( Comma Identifier ( Assign sign? (Number | Character | Identifier))? )* ;
 assign_to : Identifier
-            (Assign | StarAssign | DivAssign | PlusAssign | MinusAssign | ModAssign)
-            (Minus | Plus)? (Number | Character | Identifier)
-            (
-                (Plus | Minus | Star | Div | Mod)
-                (Minus | Plus)? (Number | Character | Identifier)
-            )*
-            Semi;
+            assignOperation
+            sign? (Number | Character | Identifier)
+            ( operation sign? (Number | Character | Identifier) )*;
 
-pp_mm: Identifier (PlusPlus | MinusMinus) Semi;
+sign : Minus | Plus;
+
+inc_dec: Identifier (PlusPlus | MinusMinus) ;
 
 operation : Plus
           | Minus
-          | PlusPlus
-          | MinusMinus
           | Star
           | Div
           | Mod;
 
 assignOperation : ModAssign
-          | StarAssign
-          | PlusAssign
-          | MinusAssign
-          | DivAssign
-          | Assign;
+                | StarAssign
+                | PlusAssign
+                | MinusAssign
+                | DivAssign
+                | Assign;
+
+comparators: Less |
+             LessEqual |
+             Greater |
+             GreaterEqual |
+             Equal |
+             NotEqual;
 
 // Lexers
 MainFunction : 'main';
@@ -90,7 +103,7 @@ Read : 'read';
 Selector : 'selector';
 SelectorCase : 'select';
 SelectorEndCase : 'other';
-Loop : 'loop';
+Loop : 'Loop';
 Until : 'until';
 
 //
@@ -108,21 +121,6 @@ Greater : '>';
 GreaterEqual : '>=';
 Equal : '==';
 NotEqual : '!=';
-
-//general
-//Operation : Plus
-//          | Minus
-//          | PlusPlus
-//          | MinusMinus
-//          | Star
-//          | Div
-//          | Mod;
-//AssignOperation : ModAssign
-//          | StarAssign
-//          | PlusAssign
-//          | MinusAssign
-//          | DivAssign
-//          | Assign;
 
 LogicalOperation : AndAnd
                  | OrOr;
@@ -183,7 +181,7 @@ fragment
 Digit : [0-9];
 
 
-OtherChar : ~([0-9a-zA-z]);
+OtherChar : ~([0-9a-zA-z']);
 
 Character : ['](Digit | Nondigit | OtherChar)['];
 
